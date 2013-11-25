@@ -95,7 +95,12 @@ module ActiveModel
           elsif object.respond_to?(:active_model_serializer) && (ams = object.active_model_serializer)
             _options = source_serializer.options
             _options[:except] = Array(_options[:except])
-            _options[:except].push source_serializer.object.class.to_s.downcase.to_sym
+            source_association = source_serializer.object.class.to_s.underscore.downcase
+            plural_source_association = source_association+'s'
+            except = ams._associations.keys.map(&:to_s).find do |association|
+              association == source_association || association == plural_source_association
+            end
+            _options[:except].push(except.to_sym) if not except.nil?
             ams.new(object, _options)
           else
             object
