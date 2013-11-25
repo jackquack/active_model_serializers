@@ -93,7 +93,10 @@ module ActiveModel
           if target_serializer
             target_serializer.new(object, source_serializer.options)
           elsif object.respond_to?(:active_model_serializer) && (ams = object.active_model_serializer)
-            ams.new(object, source_serializer.options)
+            _options = source_serializer.options
+            _options[:except] = Array(_options[:except])
+            _options[:except].push source_serializer.object.class.to_s.downcase.to_sym
+            ams.new(object, _options)
           else
             object
           end
