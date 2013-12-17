@@ -105,6 +105,7 @@ module ActiveModel
                 _options[:except].push(except.to_sym)
               end
             end
+            _options[:cache] = @options[:cache]
             ams.new(object, _options)
           else
             object

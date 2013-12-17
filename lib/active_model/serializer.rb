@@ -363,7 +363,7 @@ module ActiveModel
 
     def include_associations!
       _associations.each_key do |name|
-        include!(name) if include?(name)
+        include!(name, {cache: false}) if include?(name)
       end
     end
 
@@ -481,7 +481,7 @@ module ActiveModel
     end
 
     def perform_caching?
-      perform_caching && cache && respond_to?(:cache_key)
+      perform_caching && cache && respond_to?(:cache_key) && options[:cache] != false
     end
 
     def expand_cache_key(*args)
